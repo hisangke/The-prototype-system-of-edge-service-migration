@@ -1206,8 +1206,6 @@ from ServiceMigrationSystemUI import ServiceMigrationSystemUI
 from MaximumFlow import MaximumFlow
 import networkx as nx
 
-
-
 from PySide2.QtWidgets import *
 from PySide2 import QtCore, QtWidgets, QtGui
 
