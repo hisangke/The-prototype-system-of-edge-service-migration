@@ -1,10 +1,10 @@
 main.pyproject
 
 {
-    "files": ["main.py","Service.py","Graph_Matrix.py","EdgeMigration.py","RandomStorageSize.py","EdgeServiceMigrationUI.py","MaximumFlow.py","EdgeNode.py","LogsTextEditOutput.py","monkey.png"]
+    "files": ["main.py","Service.py","Graph_Matrix.py","ServiceMigrationSystem.py","RandomStorageSize.py","ServiceMigrationSystemUI.py","MaximumFlow.py","EdgeNode.py","LogsTextEditOutput.py","monkey.png"]
 }
 
-EdgeMigration.py
+ServiceMigrationSystem.py
 
 from Service import Service
 import time
@@ -26,9 +26,9 @@ adjacencyMatrixData=[
 
 from LogsTextEditOutput import LogsTextEditOutput
 
-#EdgeMigration(edgeNodeNumber=int(self.tab0UIcomboBox.currentText()),threshold=0.85,textEdit=self.textEdit,adjacencyMatrixData=self.adjacencyMatrixData)
+#ServiceMigrationSystem(edgeNodeNumber=int(self.tabEdgeNodeConfigureUIcomboBox.currentText()),threshold=0.85,textEdit=self.textEdit,adjacencyMatrixData=self.adjacencyMatrixData)
 
-class EdgeMigration:
+class ServiceMigrationSystem:
 def __init__(self, edgeNodeNumber=1,textEdit="",adjacencyMatrixData="",migrationResultLabelList=[],edgeNodesConfigureData=[],edgeServicesConfigureData=[]):
         self.edgeServicesConfigureData=edgeServicesConfigureData
         self.edgeNodesConfigureData=edgeNodesConfigureData
@@ -39,8 +39,8 @@ def __init__(self, edgeNodeNumber=1,textEdit="",adjacencyMatrixData="",migration
         self.migrationResultLabelList=migrationResultLabelList
         self.edgeNodeNumber=edgeNodeNumber
         self.edgeNodes=[]
-        self.installEdgeNode()
         self.migrationServiceArray=[[0 for i in range(self.edgeNodeNumber)] for j in range(self.edgeNodeNumber)]
+self.installEdgeNode()
     def run(self):
         startTime=time.time()
         text="Staring system at:\t"+str(startTime)
@@ -250,7 +250,6 @@ def __init__(self,name,servicenumber=1,threshold=0.86,cpu=1.4,ram=1,storage=2,ed
         self.services=[]
         self.installService()
         self.updateServicesCost();
-        self.textEdit=textEdit
     def preMigrationEdgeService(self,service):
         newcpu=self.getServicesCostCpu()+service.getCpu()+service.getCpu()*(1/3)
         newram=self.getServicesCostRam()+service.getRam()+service.getRam()*(1/3)
@@ -435,7 +434,7 @@ def __init__(self,name,servicenumber=1,threshold=0.86,cpu=1.4,ram=1,storage=2,ed
 
 
 
-EdgeServiceMigrationUI.py
+ServiceMigrationSystemUI.py
 
 # This Python file uses the following encoding: utf-8
 import sys
@@ -450,9 +449,9 @@ dirname = os.path.dirname(PySide2.__file__)
 plugin_path = os.path.join(dirname, 'plugins', 'platforms')
 os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = plugin_path
 
-class EdgeServiceMigrationUI(QTabWidget):
+class ServiceMigrationSystemUI(QTabWidget):
     def __init__(self, parent=None):
-        super(EdgeServiceMigrationUI, self).__init__(parent)
+        super(ServiceMigrationSystemUI, self).__init__(parent)
         self.setWindowTitle("Edge Service Migration Simulation System")
         self.tab0 = QListWidget()
         self.tab0.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAsNeeded)
@@ -461,10 +460,10 @@ class EdgeServiceMigrationUI(QTabWidget):
         self.tab3 = QWidget()
         self.tab4 = QWidget()
         self.tab5 = QWidget()
-        self.tab0UIcomboBox=QComboBox()
-        self.tab0UIstatu=False
+        self.tabEdgeNodeConfigureUIcomboBox=QComboBox()
+        self.tabEdgeNodeConfigureUIstatu=False
         self.addTab(self.tab0, "Tab 0")
-        self.tab0UI()
+        self.tabEdgeNodeConfigureUI()
         self.edgeNodesConfigureList=[]
         self.edgeServicesConfigureList=[]
         self.edgeServicesLabelList=[]
@@ -476,19 +475,19 @@ class EdgeServiceMigrationUI(QTabWidget):
         self.migrationResultLabelList=[]
         self.textEdit=QTextEdit()
     def edgeNodesConfigureListValueChanged(self):
-        self.edgeNodesConfigureData=[[] for index in range(int(self.tab0UIcomboBox.currentText()))]
+        self.edgeNodesConfigureData=[[] for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
         QtCore.qDebug("Value Change")
-        for index in range(int(self.tab0UIcomboBox.currentText())):
+        for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             data=[]
             for i in range(len(self.edgeNodesConfigureList[index])):
                 data.append(self.edgeNodesConfigureList[index][i].value())
             self.edgeNodesConfigureData[index]=data
 			
-    def tab0UIcomboxBoxSelectionChanged(self):
-        self.tab0UILabel.setText("EdgeNodeNumber: "+str(self.tab0UIcomboBox.currentText()))
-        #self.tab0UIcomboBox.hide()
-        self.edgeServicesConfigureList=[[] for i in range(int(self.tab0UIcomboBox.currentText()))]
-        self.edgeServicesConfigureData=[[] for i in range(int(self.tab0UIcomboBox.currentText()))]
+    def tabEdgeNodeConfigureUIcomboxBoxSelectionChanged(self):
+        self.tabEdgeNodeConfigureUILabel.setText("EdgeNodeNumber: "+str(self.tabEdgeNodeConfigureUIcomboBox.currentText()))
+        #self.tabEdgeNodeConfigureUIcomboBox.hide()
+        self.edgeServicesConfigureList=[[] for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
+        self.edgeServicesConfigureData=[[] for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
         nodeswindow=QMainWindow()
         realmScroll = QScrollArea(nodeswindow)
         nodeswindow.setCentralWidget(realmScroll)
@@ -497,9 +496,9 @@ class EdgeServiceMigrationUI(QTabWidget):
         container.setMinimumHeight(0)
         realmScroll.setWidget(container)
         nodesLayout = QFormLayout(container)
-        self.statuList=[False for i in range(int(self.tab0UIcomboBox.currentText()))]
+        self.statuList=[False for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
         self.edgeNodesConfigureList=[]
-        for index in range(int(self.tab0UIcomboBox.currentText())):
+        for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
 
             hbox = QHBoxLayout()
             hbox1 = QHBoxLayout()
@@ -569,50 +568,50 @@ class EdgeServiceMigrationUI(QTabWidget):
 
             edgeNodeConfigure=[hbox1_spinbox,hbox2_spinbox,hbox3_spinbox,hbox4_spinbox]
             self.edgeNodesConfigureList.append(edgeNodeConfigure)
-        if self.tab0UIstatu:
-            self.tab0UIlayout.removeRow(self.tab0UInodeswindow)
+        if self.tabEdgeNodeConfigureUIstatu:
+            self.tabEdgeNodeConfigureUIlayout.removeRow(self.tabEdgeNodeConfigureUInodeswindow)
 
-        self.tab0UIlayout.insertRow(2,nodeswindow)
-        self.tab0UInodeswindow=nodeswindow
+        self.tabEdgeNodeConfigureUIlayout.insertRow(2,nodeswindow)
+        self.tabEdgeNodeConfigureUInodeswindow=nodeswindow
 
-        if bool(1-self.tab0UIstatu):
+        if bool(1-self.tabEdgeNodeConfigureUIstatu):
             self.addTab(self.tab2,"Tab 2")
-            self.tab2UI()
-        self.tab0UIstatu=True
-        self.edgeNodesConfigureData=[[] for index in range(int(self.tab0UIcomboBox.currentText()))]
+            self.tabEdgeServiceConfigureUI()
+        self.tabEdgeNodeConfigureUIstatu=True
+        self.edgeNodesConfigureData=[[] for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
 
-        for index in range(int(self.tab0UIcomboBox.currentText())):
+        for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             data=[]
             for i in range(len(self.edgeNodesConfigureList[index])):
                 data.append(self.edgeNodesConfigureList[index][i].value())
             self.edgeNodesConfigureData[index]=data
 
 
-    def tab0UI(self):
-        self.tab0UIlayout = QFormLayout()
-        self.tab0UIcomboBox.setFixedWidth(100)
-        self.tab0UIcomboBox.addItems([str(index) for index in range(1000)])
-        self.tab0UILabel=QLabel("EdgeNodeNumber: 0 ")
+    def tabEdgeNodeConfigureUI(self):
+        self.tabEdgeNodeConfigureUIlayout = QFormLayout()
+        self.tabEdgeNodeConfigureUIcomboBox.setFixedWidth(100)
+        self.tabEdgeNodeConfigureUIcomboBox.addItems([str(index) for index in range(1000)])
+        self.tabEdgeNodeConfigureUILabel=QLabel("EdgeNodeNumber: 0 ")
 
         layout=QHBoxLayout()
-        layout.addWidget(self.tab0UILabel,0,QtCore.Qt.AlignLeft)
+        layout.addWidget(self.tabEdgeNodeConfigureUILabel,0,QtCore.Qt.AlignLeft)
 
-        layout.addWidget(self.tab0UIcomboBox,0,QtCore.Qt.AlignLeft)
+        layout.addWidget(self.tabEdgeNodeConfigureUIcomboBox,0,QtCore.Qt.AlignLeft)
         layout.addStretch(2)
 
-        self.tab0UIlayout.insertRow(0,layout)
+        self.tabEdgeNodeConfigureUIlayout.insertRow(0,layout)
         self.setTabText(0, "Edge Node Configure")
         # 在标签1中添加这个帧布局
 
-        self.tab0.setLayout(self.tab0UIlayout)
-        self.tab0UIcomboBox.currentIndexChanged.connect(self.tab0UIcomboxBoxSelectionChanged)
+        self.tab0.setLayout(self.tabEdgeNodeConfigureUIlayout)
+        self.tabEdgeNodeConfigureUIcomboBox.currentIndexChanged.connect(self.tabEdgeNodeConfigureUIcomboxBoxSelectionChanged)
     # 同理如上
-    def tab1UI(self):
+    def tabEdgeNodeAdjacencyMatrixUI(self):
         def adjacencyMatrixSpinBoxChanged():
             self.adjacencyMatrixData=[]
-            for index1 in range(int(self.tab0UIcomboBox.currentText())):
+            for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 data=[]
-                for index2 in range(int(self.tab0UIcomboBox.currentText())):
+                for index2 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                     data.append(self.adjacencyMatrixSpinBox[index1][index2].value())
                     #QtCore.qDebug(str(self.adjacencyMatrixSpinBox[index1][index2].value()))
                 self.adjacencyMatrixData.append(data)
@@ -628,7 +627,7 @@ class EdgeServiceMigrationUI(QTabWidget):
         buttonHbox = QHBoxLayout()
         importButton=QPushButton("Import Data From File")
         #importButton.setStyleSheet('QPushButton {background-color: red;}')
-        importButton.clicked.connect(self.getFiles)
+        importButton.clicked.connect(self.getAdjacencyMatrixFiles)
         importButton.resize(150, 480)
         importButton.setMaximumSize(150, 480)
         importButton.setMaximumSize(150, 480)
@@ -638,11 +637,11 @@ class EdgeServiceMigrationUI(QTabWidget):
             importButton.setEnabled(False)
             submitButton.setEnabled(False)
             self.addTab(self.tab4, "Tab 4")
-            self.tab4UI()
+            self.tabLogsInformationUI()
             self.addTab(self.tab3, "Tab 3")
-            self.tab3UI()
+            self.tabStartButtonUI()
             self.addTab(self.tab5, "Tab 5")
-            self.tab5UI()
+            self.tabEdgeServiceMigrationResultUI()
 
         submitButton=QPushButton("Submit Adjacency Matrix")
         #submitButton.setStyleSheet('QPushButton {background-color: red;}')
@@ -655,16 +654,16 @@ class EdgeServiceMigrationUI(QTabWidget):
         hbox = QHBoxLayout()
         hbox.addWidget(QLabel(),0,QtCore.Qt.AlignLeft)
 
-        for index in range(int(self.tab0UIcomboBox.currentText())):
+        for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             hbox.addWidget(QLabel(" Node "+str(index)),0,QtCore.Qt.AlignLeft)
         nodesLayout.insertRow(2,hbox)
-        self.adjacencyMatrixSpinBox=[[] for index in range(int(self.tab0UIcomboBox.currentText()))]
-        for index in range(int(self.tab0UIcomboBox.currentText())):
+        self.adjacencyMatrixSpinBox=[[] for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
+        for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             hbox = QHBoxLayout()
             spinBoxList=[]
 
             hbox.addWidget(QLabel("Node "+str(index)),0,QtCore.Qt.AlignLeft)
-            for _ in range(int(self.tab0UIcomboBox.currentText())):
+            for _ in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 spinBox=QDoubleSpinBox()
                 spinBox.setFixedWidth(150)
                 spinBox.setMaximum(1000.0)
@@ -681,21 +680,21 @@ class EdgeServiceMigrationUI(QTabWidget):
         self.tab1.setLayout(layout)
         self.adjacencyMatrixData=[]
 
-        for index1 in range(int(self.tab0UIcomboBox.currentText())):
+        for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             data=[]
-            for index2 in range(int(self.tab0UIcomboBox.currentText())):
+            for index2 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 data.append(self.adjacencyMatrixSpinBox[index1][index2].value())
                 #QtCore.qDebug(str(self.adjacencyMatrixSpinBox[index1][index2].value()))
             self.adjacencyMatrixData.append(data)
 
 
-    def getFiles(self):
+    def getAdjacencyMatrixFiles(self):
         def adjacencyMatrixSpinBoxChanged():
             self.adjacencyMatrixData=[]
 
-            for index1 in range(int(self.tab0UIcomboBox.currentText())):
+            for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 data=[]
-                for index2 in range(int(self.tab0UIcomboBox.currentText())):
+                for index2 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                     data.append(self.adjacencyMatrixSpinBox[index1][index2].value())
                     #QtCore.qDebug(str(self.adjacencyMatrixSpinBox[index1][index2].value()))
                 self.adjacencyMatrixData.append(data)
@@ -715,7 +714,7 @@ class EdgeServiceMigrationUI(QTabWidget):
                 usunT = dial.addButton('Yes', QMessageBox.YesRole)
                 dial.exec_()
                 if dial.clickedButton() == usunT:
-                    self.getFiles()
+                    self.getAdjacencyMatrixFiles()
                 else:
                     return
             file=open(filenames[0],'r')
@@ -723,16 +722,16 @@ class EdgeServiceMigrationUI(QTabWidget):
                 line=line.replace("\n","")
                 keys=line.split(" ")
 
-                if len(keys)!=int(self.tab0UIcomboBox.currentText()):
+                if len(keys)!=int(self.tabEdgeNodeConfigureUIcomboBox.currentText()):
                     dial = QMessageBox()
-                    dial.setText(u"The document does not meet the requirements("+str(self.tab0UIcomboBox.currentText())+" nodes)\n"+"Reselect the adjacency matrix file? ")
+                    dial.setText(u"The document does not meet the requirements("+str(self.tabEdgeNodeConfigureUIcomboBox.currentText())+" nodes)\n"+"Reselect the adjacency matrix file? ")
                     dial.setWindowTitle("Caution!")
                     dial.setIcon(QMessageBox.Question)
                     dial.addButton('No', QMessageBox.RejectRole)
                     usunT = dial.addButton('Yes', QMessageBox.YesRole)
                     dial.exec_()
                     if dial.clickedButton() == usunT:
-                        self.getFiles()
+                        self.getAdjacencyMatrixFiles()
                     else:
                         Break
                     break
@@ -741,7 +740,7 @@ class EdgeServiceMigrationUI(QTabWidget):
                 adjacencyMatrixSpinBoxChanged()
             file.close()
 
-def tab5UI(self):
+def tabEdgeServiceMigrationResultUI(self):
 
         self.setTabText(5, "Edge Service Migration Result")
         window=QMainWindow()
@@ -756,7 +755,7 @@ def tab5UI(self):
 
         hbox = QHBoxLayout()
         hbox.addWidget(QLabel(str("{:>7}".format("Node"))),0,QtCore.Qt.AlignCenter)
-        for j in range(int(self.tab0UIcomboBox.currentText())):
+        for j in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             label=QLabel(str("{:>3}".format(j)))
             hbox.addWidget(label,0,QtCore.Qt.AlignCenter)
         label=QLabel(str("cloud".format(j)))
@@ -765,14 +764,14 @@ def tab5UI(self):
         nodesLayout.insertRow(-1,hbox)
 
 
-        self.migrationResultLabelList=[[] for index in range(int(self.tab0UIcomboBox.currentText())+1)]
+        self.migrationResultLabelList=[[] for index in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())+1)]
 
-        for j in range(int(self.tab0UIcomboBox.currentText())+1):
+        for j in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())+1):
             hbox = QHBoxLayout()
             hbox.addWidget(QLabel(str("{:>5}".format(j))+" "),0,QtCore.Qt.AlignCenter)
 
             labelList=[]
-            for i in range(int(self.tab0UIcomboBox.currentText())+1):
+            for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())+1):
                 label=QLabel(str("{:>5}".format("")))
                 labelList.append(label)
                 hbox.addWidget(label,0,QtCore.Qt.AlignCenter)
@@ -785,18 +784,18 @@ def tab5UI(self):
 
         self.tab5.setLayout(layout)
 
-    def tab3UI(self):
+    def tabStartButtonUI(self):
         def startButtonClicked():
             self.startButton.setEnabled(False)
-            from EdgeMigration import EdgeMigration
+            from ServiceMigrationSystem import ServiceMigrationSystem
             self.textEdit.clear()
 
 
-            edgeNodeNumber=int(self.tab0UIcomboBox.currentText())
+            edgeNodeNumber=int(self.tabEdgeNodeConfigureUIcomboBox.currentText())
 ##########################################################################
             #print("#####",self.edgeServicesConfigureData)
 
-            system=EdgeMigration(edgeNodeNumber=edgeNodeNumber,
+            system=ServiceMigrationSystem(edgeNodeNumber=edgeNodeNumber,
                                                 textEdit=self.textEdit,
                                                 adjacencyMatrixData=self.adjacencyMatrixData,
                                                 migrationResultLabelList=self.migrationResultLabelList,
@@ -816,7 +815,7 @@ def tab5UI(self):
             LogsTextEditOutput(textEdit=self.textEdit,text=str(costTime))
             self.startButton.setEnabled(True)
             #self.addTab(self.tab5, "Tab 5")
-            #self.tab5UI()
+            #self.tabEdgeServiceMigrationResultUI()
 ##########################################################################
 
         self.textEdit.setReadOnly(True)
@@ -850,7 +849,7 @@ def tab5UI(self):
         layout.addRow(nodesLayout)
         self.tab3.setLayout(layout)
 
-    def tab4UI(self):
+    def tabLogsInformationUI(self):
 
         self.setTabText(4, "Logs Information")
         window=QMainWindow()
@@ -866,10 +865,10 @@ def tab5UI(self):
         nodesLayout = QFormLayout(container)
 
         self.adjacencyMatrixData=[]
-        for index1 in range(int(self.tab0UIcomboBox.currentText())):
+        for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             tempdata=[]
 
-            for index2 in range(int(self.tab0UIcomboBox.currentText())):
+            for index2 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 tempdata.append(self.adjacencyMatrixSpinBox[index1][index2].value())
             self.adjacencyMatrixData.append(tempdata)
 
@@ -926,9 +925,9 @@ def tab5UI(self):
             hbox1_spinbox,hbox2_spinbox,hbox3_spinbox,hbox4_spinbox=edgeServices[index]
             QtCore.qDebug(str(hbox1_spinbox.value())+" "+str(hbox2_spinbox.value())+" "+str(hbox3_spinbox.value())+" "+str(hbox4_spinbox.value()))
 
-        self.edgeServicesConfigureData=[[] for i in range(int(self.tab0UIcomboBox.currentText()))]
+        self.edgeServicesConfigureData=[[] for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
 
-        for index1 in range(int(self.tab0UIcomboBox.currentText())):
+        for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             edgeServices=self.edgeServicesConfigureList[index1]
             data=[]
             for index2 in range(len(edgeServices)):
@@ -937,7 +936,7 @@ def tab5UI(self):
             self.edgeServicesConfigureData[index1]=data
 
 
-    def tab2UI(self):
+    def tabEdgeServiceConfigureUI(self):
         subcomboBoxList=[]
         layoutList=[]
         servicesWindowList=[[] for i in range(1000)]
@@ -969,7 +968,7 @@ def tab5UI(self):
                     statu=False
             if statu:
                 self.addTab(self.tab1, "Tab 1")
-                self.tab1UI()
+                self.tabEdgeNodeAdjacencyMatrixUI()
 
             if str(self.tab2.currentIndex())!=str("-1"):
                 for index in range(int(subcomboBoxList[self.tab2.currentIndex()].currentText())):
@@ -1050,8 +1049,8 @@ def tab5UI(self):
             layoutList[self.tab2.currentIndex()].insertRow(2,servicesWindow)
             servicesWindowList[self.tab2.currentIndex()].append(servicesWindow)
 
-            self.edgeServicesConfigureData=[[] for i in range(int(self.tab0UIcomboBox.currentText()))]
-            for index1 in range(int(self.tab0UIcomboBox.currentText())):
+            self.edgeServicesConfigureData=[[] for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText()))]
+            for index1 in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
                 edgeServices=self.edgeServicesConfigureList[index1]
                 data=[]
                 for index2 in range(len(edgeServices)):
@@ -1059,7 +1058,7 @@ def tab5UI(self):
                     data.append([hbox1_spinbox.value(),hbox2_spinbox.value(),hbox3_spinbox.value(),hbox4_spinbox.value()])
                 self.edgeServicesConfigureData[index1]=data
 
-        for i in range(int(self.tab0UIcomboBox.currentText())):
+        for i in range(int(self.tabEdgeNodeConfigureUIcomboBox.currentText())):
             subTab=QWidget()
             layout = QFormLayout()
             subcomboBox=QComboBox()
@@ -1203,7 +1202,7 @@ main.py
 import sys
 from PySide2.QtWidgets import QApplication
 
-from EdgeServiceMigrationUI import EdgeServiceMigrationUI
+from ServiceMigrationSystemUI import ServiceMigrationSystemUI
 from MaximumFlow import MaximumFlow
 import networkx as nx
 
@@ -1220,7 +1219,7 @@ if __name__ == '__main__':
     splash.setPixmap(pixmap)
     splash.show()
 
-    mainWindow = EdgeServiceMigrationUI()
+    mainWindow = ServiceMigrationSystemUI()
     w=1050
     h=350
     mainWindow.resize(w, h)
